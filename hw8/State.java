@@ -59,12 +59,19 @@ public class State {
         }
     }
 
-    public State (int n, int k, int[][]state_grid, List<Integer>[][] domain) {
-        this.n = n;
-        this.k = k;
-        this.state_grid = state_grid;
-        this.domain = domain;
+    public State (State parent, Move m) {
+        this.n = parent.n;
+        this.k = parent.k;
+        this.state_grid = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            this.state_grid[i] = parent.state_grid[i].clone();
+            for (int j = 0; j < n; j++) {
+                this.domain[i][j] = new ArrayList<>(parent.domain[i][j]);
+            }
+        }
 
+        this.state_grid[m.row][m.col] = m.value;
+        updateDomains(m.row, m.col, m.value);
     }
 
     public boolean isGoal() {
@@ -103,7 +110,7 @@ public class State {
     }
 
     public State successorState(Move m) throws IllegalArgumentException {
-
+        
     }
 
     // Checks to see if a value placed in a cell at row and column would be valid
